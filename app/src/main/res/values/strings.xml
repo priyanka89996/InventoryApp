@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Pi-venTo</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="username">username</string>
+    <string name="enterpassword">Enter password</string>
+    <string name="enterusername">Enter username</string>
+    <string name="login">Login</string>
+    <string name="restock">Restock</string>
+    <string name="receivedStock">Received Stock</string>
+    <string name="addProduct">Add Product</string>
+    <string name="enterProName">Enter Product Name</string>
+    <string name="enterBarCodeNumber">Enter Bar Code Number</string>
+    <string name="wholesalePrice">Wholesale Price(£)</string>
+    <string name="retailPrice">Retail Price(£)</string>
+    <string name="quantity">Quantity</string>
+    <string name="totalStockValue">Total Stock</string>
+    <string name="noData">No Data</string>
+    <string name="placeOrder">Place Order</string>
+    <string name="received">Received</string>
+    <string name="checkout">Checkout</string>
+    <string name="noDataInCart">No Item in Cart</string>
+    <string name="noUser">User does not exist</string>
+    <string name="addToCart">Add to Cart</string>
+</resources>

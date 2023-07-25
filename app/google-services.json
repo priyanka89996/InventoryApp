@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "891390116138",
+    "project_id": "mystockapp-2e88d",
+    "storage_bucket": "mystockapp-2e88d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891390116138:android:94aa2d2e3db7a40a011e53",
+        "android_client_info": {
+          "package_name": "com.swaraj.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891390116138-allaarnsq13i8l0b7pkbl412pg0gv7ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsLCfwdta0kQas-6QNHpCSxWcAtAPVra4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891390116138-allaarnsq13i8l0b7pkbl412pg0gv7ka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
