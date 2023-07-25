@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class EmployeeActivity extends AppCompatActivity {
 
     EditText etBarCode;
-    TextView tvProductName, tvNoData, tvRetailPrice;
+    TextView tvProductName, tvNoData, tvRetailPrice, tvTotalItems, tvTotalAmount;
     Button btnTill, btnAddToCart, btnCheckout;
     RecyclerView recyclerView;
     LinearLayout llCartData, llDisplayItemData, llBottom;
@@ -47,7 +47,7 @@ public class EmployeeActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Intent intent;
     String userName = "employee";
-    int totalItems=0,totalAmount;
+    int totalItems = 0, totalAmount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,8 @@ public class EmployeeActivity extends AppCompatActivity {
         llCartData = findViewById(R.id.llCartData);
         llDisplayItemData = findViewById(R.id.llSearchItemDisplay);
         llBottom = findViewById(R.id.llBottom);
+        tvTotalItems = findViewById(R.id.tvTotalItems);
+        tvTotalAmount = findViewById(R.id.tvTotalAmount);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnTill.setVisibility(View.GONE);
         progressDialog.setTitle("Getting Cart Data...");
@@ -106,6 +108,13 @@ public class EmployeeActivity extends AppCompatActivity {
                         llCartData.setVisibility(View.VISIBLE);
                         btnTill.setVisibility(View.GONE);
                         progressDialog.dismiss();
+                        totalItems = 0; totalAmount = 0;
+                        for (int i = 0; i < cartProductData.size(); i++) {
+                            totalItems = cartProductData.size();
+                            totalAmount += cartProductData.get(i).getrPrice();
+                        }
+                        tvTotalItems.setText("Total Item : "+totalItems);
+                        tvTotalAmount.setText("Total Amount : "+totalAmount+"£");
                     }
                 } else {
                     Log.d("notdata", "jaka");
@@ -144,6 +153,13 @@ public class EmployeeActivity extends AppCompatActivity {
                 btnCheckout.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.VISIBLE);
                 employeeItems.child(productData.get(0).getBarCode()).setValue(productData);
+                totalItems = 0; totalAmount = 0;
+                for (int i = 0; i < cartProductData.size(); i++) {
+                    totalItems = cartProductData.size();
+                    totalAmount += cartProductData.get(i).getrPrice();
+                }
+                tvTotalItems.setText("Total Item : "+totalItems);
+                tvTotalAmount.setText("Total Amount : "+totalAmount+"£");
             }
         });
         btnCheckout.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +189,9 @@ public class EmployeeActivity extends AppCompatActivity {
                                 recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
                                 tvNoData.setVisibility(View.VISIBLE);
                                 llDisplayItemData.setVisibility(View.GONE);
+                                llBottom.setVisibility(View.GONE);
+                                totalAmount = 0;
+                                totalItems = 0;
                                 etBarCode.setText("");
                                 etBarCode.setFocusable(true);
                                 etBarCode.requestFocus();
@@ -196,9 +215,9 @@ public class EmployeeActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(s.toString().equalsIgnoreCase("")){
-                        llDisplayItemData.setVisibility(View.GONE);
-                    }
+                if (s.toString().equalsIgnoreCase("")) {
+                    llDisplayItemData.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -255,9 +274,9 @@ public class EmployeeActivity extends AppCompatActivity {
 
                 }
                 if (isFound == true) {
-                    if(productData.get(0).getQuantity() > 0) {
+                    if (productData.get(0).getQuantity() > 0) {
                         llDisplayItemData.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         showToast("Stock is finished for this item");
                         //Toast.makeText(EmployeeActivity.this, "", Toast.LENGTH_SHORT).show();
                     }
@@ -283,7 +302,8 @@ public class EmployeeActivity extends AppCompatActivity {
             }
         });
     }
-    public void showToast(String title){
+
+    public void showToast(String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(title)
                 .setCancelable(false)

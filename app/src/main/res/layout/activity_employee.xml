@@ -146,6 +146,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin5"
+            android:paddingRight="@dimen/margin10"
+            android:paddingLeft="@dimen/margin10"
             android:orientation="horizontal">
 
             <TextView
