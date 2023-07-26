@@ -1,19 +1,28 @@
 package com.swaraj.myapplication.data;
 
 public class ProductData {
-    String name,barCode, imagePath;
+    String name,barCode, imagePath, videoPath;
     int wPrice, rPrice,quantity;
 
     public ProductData() {
     }
 
-    public ProductData(String name, String barCode, String imagePath, int wPrice, int rPrice, int quantity) {
+    public ProductData(String name, String barCode, String imagePath, int wPrice, int rPrice, int quantity, String videoPath) {
         this.name = name;
         this.barCode = barCode;
         this.imagePath = imagePath;
         this.wPrice = wPrice;
         this.rPrice = rPrice;
         this.quantity = quantity;
+        this.videoPath = videoPath;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public String getName() {

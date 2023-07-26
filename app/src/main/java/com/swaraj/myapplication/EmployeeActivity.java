@@ -286,7 +286,8 @@ public class EmployeeActivity extends AppCompatActivity {
                                 String.valueOf(postSnapshot.child("imagePath").getValue()),
                                 Integer.parseInt(postSnapshot.child("wPrice").getValue().toString()),
                                 Integer.parseInt(postSnapshot.child("rPrice").getValue().toString()),
-                                1));
+                                1,
+                                String.valueOf(postSnapshot.child("videoPath").getValue())));
                         tvProductName.setText("" + String.valueOf(postSnapshot.child("name").getValue()));
                         tvRetailPrice.setText("Price : " + String.valueOf(postSnapshot.child("rPrice").getValue()));
 

@@ -112,7 +112,8 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
                             String.valueOf(postSnapshot.child("imagePath").getValue()),
                             Integer.parseInt(postSnapshot.child("wPrice").getValue().toString()),
                             Integer.parseInt(postSnapshot.child("rPrice").getValue().toString()),
-                            Integer.parseInt(postSnapshot.child("quantity").getValue().toString())));
+                            Integer.parseInt(postSnapshot.child("quantity").getValue().toString()),
+                            String.valueOf(postSnapshot.child("videoPath").getValue())));
                 }
                 if (productData.size() > 0 && productData != null) {
                     recyclerView.setAdapter(new ReceivedAdapter(ReceivedActivity.this, productData, productInterface));

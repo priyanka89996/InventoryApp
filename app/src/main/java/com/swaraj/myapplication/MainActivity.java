@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
                             String.valueOf(postSnapshot.child("imagePath").getValue()),
                             Integer.parseInt(postSnapshot.child("wPrice").getValue().toString()),
                             Integer.parseInt(postSnapshot.child("rPrice").getValue().toString()),
-                            Integer.parseInt(postSnapshot.child("quantity").getValue().toString())));
+                            Integer.parseInt(postSnapshot.child("quantity").getValue().toString()),
+                            String.valueOf(postSnapshot.child("videoPath").getValue())));
                     totalStockValue += Integer.parseInt(postSnapshot.child("quantity").getValue().toString()) *
                             Integer.parseInt(postSnapshot.child("wPrice").getValue().toString());
                 }

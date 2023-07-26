@@ -1,6 +1,7 @@
 package com.swaraj.myapplication.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.swaraj.myapplication.R;
+import com.swaraj.myapplication.VideoPlayerActivity;
 import com.swaraj.myapplication.data.ProductData;
 
 import java.util.ArrayList;
@@ -58,7 +60,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         }else{
             holder.redFlag.setVisibility(View.GONE);
         }
-
+        if(data.getVideoPath().equalsIgnoreCase("")){
+            holder.ivVideo.setVisibility(View.GONE);
+        }else{
+            holder.ivVideo.setVisibility(View.VISIBLE);
+        }
+        holder.ivVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, VideoPlayerActivity.class);
+                intent.putExtra("videoLink",data.getVideoPath());
+                context.startActivity(intent);
+            }
+        });
         //holder.linearLayout.setBackgroundResource(R.color.purple_100);
     }
 
@@ -69,7 +83,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
     class viewHolder extends RecyclerView.ViewHolder{
 
-        ImageView productImage, redFlag;
+        ImageView productImage, redFlag, ivVideo;
         TextView tvProductName, tvWPrice, tvRPrice,tvQuantity;
         CardView linearLayout;
         public viewHolder(@NonNull View itemView) {
@@ -81,6 +95,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             tvRPrice = itemView.findViewById(R.id.tvRetailPrice);
             tvQuantity = itemView.findViewById(R.id.tvQuantity);
             linearLayout = itemView.findViewById(R.id.llListItem);
+            ivVideo = itemView.findViewById(R.id.ivDisplayVideo);
 
         }
     }

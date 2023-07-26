@@ -63,7 +63,7 @@ public class RestockActivity extends AppCompatActivity {
                         Log.d("updated order", "" + productData.get(i).getName());
                         databaseReference = FirebaseDatabase.getInstance().getReference("placedOrders");
                         ProductData ProductData = new ProductData(productData.get(i).getName(),productData.get(i).getBarCode(),
-                                productData.get(i).getImagePath(),productData.get(i).getwPrice(),productData.get(i).getrPrice(),productData.get(i).getQuantity());
+                                productData.get(i).getImagePath(),productData.get(i).getwPrice(),productData.get(i).getrPrice(),productData.get(i).getQuantity(),productData.get(i).getVideoPath());
 
                         // Adding image upload id s child element into databaseReference.
                         databaseReference.child(productData.get(i).getBarCode()).setValue(ProductData);
@@ -97,7 +97,8 @@ public class RestockActivity extends AppCompatActivity {
                                 String.valueOf(postSnapshot.child("imagePath").getValue()),
                                 Integer.parseInt(postSnapshot.child("wPrice").getValue().toString()),
                                 Integer.parseInt(postSnapshot.child("rPrice").getValue().toString()),
-                                Integer.parseInt(postSnapshot.child("quantity").getValue().toString())));
+                                Integer.parseInt(postSnapshot.child("quantity").getValue().toString()),
+                                String.valueOf(postSnapshot.child("videoPath").getValue())));
                         arrQuantity.add(Integer.parseInt(postSnapshot.child("quantity").getValue().toString()));
                     }
 

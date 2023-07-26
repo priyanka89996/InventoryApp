@@ -16,7 +16,7 @@
     <string name="retailPrice">Retail Price(£)</string>
     <string name="quantity">Quantity</string>
     <string name="totalStockValue">Total Stock</string>
-    <string name="noData">No Data</string>
+    <string name="noData">No Data at this moment</string>
     <string name="placeOrder">Place Order</string>
     <string name="received">Received</string>
     <string name="checkout">Checkout</string>

@@ -106,13 +106,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin20"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/ivUploadImage"
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:src="@drawable/add_photo" />
+                    android:src="@drawable/imageadd" />
+                <ImageView
+                    android:id="@+id/ivUploadVideo"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/add_video" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
