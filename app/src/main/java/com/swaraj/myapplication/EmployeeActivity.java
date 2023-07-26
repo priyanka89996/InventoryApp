@@ -8,16 +8,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -63,6 +70,7 @@ public class EmployeeActivity extends AppCompatActivity {
         if (intent != null) {
             userName = intent.getStringExtra("name");
         }
+
         cartProductData = new ArrayList<>();
         productData = new ArrayList<>();
         changedProductQuantity = new ArrayList<>();
@@ -153,6 +161,9 @@ public class EmployeeActivity extends AppCompatActivity {
                 llNoData.setVisibility(View.VISIBLE);
                 btnCheckout.setVisibility(View.GONE);
                 llBottom.setVisibility(View.GONE);
+                etBarCode.requestFocus();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
             }
         });
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +201,8 @@ public class EmployeeActivity extends AppCompatActivity {
                 llDisplayItemData.setVisibility(View.GONE);
                 etBarCode.setFocusable(true);
                 etBarCode.requestFocus();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
                 etBarCode.setText("");
                 btnCheckout.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.VISIBLE);
@@ -358,15 +371,30 @@ public class EmployeeActivity extends AppCompatActivity {
     }
 
     public void showToast(String title) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(title)
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_box);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        // dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT,
+        // LayoutParams.WRAP_CONTENT);
+        TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitleAlert);
+        tvTitle.setText(title);
+        Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

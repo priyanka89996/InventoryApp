@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ProductData> productData;
     ProgressDialog progressDialog;
     int totalStockValue=0;
+    ImageView ivAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +56,18 @@ public class MainActivity extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnAdd);
         tvTotalStock = findViewById(R.id.tvTotalValue);
         tvNoDate = findViewById(R.id.tvNoDate);
+        ivAudio = findViewById(R.id.ivAudio);
+        ivAudio.setVisibility(View.VISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getData();
 
+        ivAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, RecordAudioActivity.class));
+            }
+        });
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

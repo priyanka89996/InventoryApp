@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/idTVstatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="@string/status"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+
+        <TextView
+            android:id="@+id/btnRecord"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/purple_500"
+            android:padding="@dimen/margin20"
+            android:text="@string/start_recording"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:drawableTopCompat="@drawable/ic_baseline_mic_24" />
+
+
+        <TextView
+            android:id="@+id/btnStop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/purple_500"
+            android:padding="@dimen/margin20"
+            android:text="@string/stop_recording"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:drawableTopCompat="@drawable/ic_baseline_mic_off_24" />
+
+
+        <TextView
+            android:id="@+id/btnPlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/purple_500"
+            android:padding="@dimen/margin20"
+            android:text="@string/play_recording"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:drawableTopCompat="@drawable/ic_baseline_play_circle_filled_24" />
+
+
+        <TextView
+            android:id="@+id/btnStopPlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/purple_500"
+            android:lines="2"
+            android:padding="@dimen/margin20"
+            android:text="@string/stop_playing"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:drawableTopCompat="@drawable/ic_baseline_pause_circle_24" />
+
+    </LinearLayout>
+</RelativeLayout>

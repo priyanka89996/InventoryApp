@@ -13,4 +13,5 @@
     <dimen name="textsize_medium">18dp</dimen>
     <dimen name="margin30">30dp</dimen>
     <dimen name="margin15">15dp</dimen>
+    <dimen name="margin8">8dp</dimen>
 </resources>
