@@ -1,6 +1,7 @@
 package com.swaraj.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
@@ -63,7 +64,8 @@ public class AddProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
-
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.titlebar);
         etBarCode = findViewById(R.id.etBarCode);
         etProductName = findViewById(R.id.etProductName);
         npWPrice = findViewById(R.id.npWholesalePrice);
@@ -226,7 +228,7 @@ public class AddProductActivity extends AppCompatActivity {
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
 
                             // Setting progressDialog Title.
-                            progressDialog.setTitle("Image is Uploading...");
+                            progressDialog.setTitle("Data is Uploading...");
 
                         }
                     });

@@ -1,13 +1,16 @@
 package com.swaraj.myapplication.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +18,7 @@ import com.swaraj.myapplication.R;
 import com.swaraj.myapplication.data.ProductData;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder>{
 
@@ -54,6 +58,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         }else{
             holder.redFlag.setVisibility(View.GONE);
         }
+
+        //holder.linearLayout.setBackgroundResource(R.color.purple_100);
     }
 
     @Override
@@ -65,6 +71,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
         ImageView productImage, redFlag;
         TextView tvProductName, tvWPrice, tvRPrice,tvQuantity;
+        CardView linearLayout;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.ivProductImage);
@@ -73,6 +80,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             tvWPrice = itemView.findViewById(R.id.tvWholesalePrice);
             tvRPrice = itemView.findViewById(R.id.tvRetailPrice);
             tvQuantity = itemView.findViewById(R.id.tvQuantity);
+            linearLayout = itemView.findViewById(R.id.llListItem);
 
         }
     }

@@ -1,7 +1,9 @@
 package com.swaraj.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +39,8 @@ public class EmployeeActivity extends AppCompatActivity {
     TextView tvProductName, tvNoData, tvRetailPrice, tvTotalItems, tvTotalAmount;
     Button btnTill, btnAddToCart, btnCheckout;
     RecyclerView recyclerView;
-    LinearLayout llCartData, llDisplayItemData, llBottom;
+    LinearLayout llCartData, llDisplayItemData, llBottom,llNoData, llAddToCart;
+    ConstraintLayout llTill;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     DatabaseReference getEmployeeItems;
@@ -53,6 +56,8 @@ public class EmployeeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.titlebar);
         intent = getIntent();
         if (intent != null) {
             userName = intent.getStringExtra("name");
@@ -71,15 +76,19 @@ public class EmployeeActivity extends AppCompatActivity {
         btnTill = findViewById(R.id.btnTill);
         btnAddToCart = findViewById(R.id.btnAddToCart);
         btnCheckout = findViewById(R.id.btnCheckoutItems);
+        llTill = findViewById(R.id.llTill);
+        llNoData = findViewById(R.id.llNoData);
         recyclerView = findViewById(R.id.rvCartItem);
         tvNoData = findViewById(R.id.tvNoDate);
         llCartData = findViewById(R.id.llCartData);
         llDisplayItemData = findViewById(R.id.llSearchItemDisplay);
+        llAddToCart = findViewById(R.id.llAddtoCart);
         llBottom = findViewById(R.id.llBottom);
         tvTotalItems = findViewById(R.id.tvTotalItems);
         tvTotalAmount = findViewById(R.id.tvTotalAmount);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnTill.setVisibility(View.GONE);
+        llTill.setVisibility(View.GONE);
         progressDialog.setTitle("Getting Cart Data...");
         progressDialog.show();
 
@@ -97,6 +106,7 @@ public class EmployeeActivity extends AppCompatActivity {
                     }
                     if (productData != null && productData.size() > 0) {
                         tvNoData.setVisibility(View.GONE);
+                        llNoData.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
                         cartProductData.addAll(productData);
                         recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
@@ -107,6 +117,7 @@ public class EmployeeActivity extends AppCompatActivity {
                         llBottom.setVisibility(View.VISIBLE);
                         llCartData.setVisibility(View.VISIBLE);
                         btnTill.setVisibility(View.GONE);
+                        llTill.setVisibility(View.GONE);
                         progressDialog.dismiss();
                         totalItems = 0; totalAmount = 0;
                         for (int i = 0; i < cartProductData.size(); i++) {
@@ -119,6 +130,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 } else {
                     Log.d("notdata", "jaka");
                     btnTill.setVisibility(View.VISIBLE);
+                    llTill.setVisibility(View.VISIBLE);
                     progressDialog.dismiss();
                 }
             }
@@ -132,9 +144,11 @@ public class EmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnTill.setVisibility(View.GONE);
+                llTill.setVisibility(View.GONE);
                 llCartData.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 tvNoData.setVisibility(View.VISIBLE);
+                llNoData.setVisibility(View.VISIBLE);
                 btnCheckout.setVisibility(View.GONE);
                 llBottom.setVisibility(View.GONE);
             }
@@ -143,8 +157,17 @@ public class EmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tvNoData.setVisibility(View.GONE);
+                llNoData.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 cartProductData.addAll(productData);
+                /*String barCode = cartProductData.get(cartProductData.size()-1).getBarCode();
+                for(int i=0;i<cartProductData.size();i++){
+                    if(cartProductData.get(i).getBarCode().equalsIgnoreCase(barCode)){
+                        cartProductData.get(i).setQuantity(cartProductData.get(i).getQuantity()+1);
+                        cartProductData.remove(cartProductData.size()-1);
+                    }
+                }*/
+
                 recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
                 llDisplayItemData.setVisibility(View.GONE);
                 etBarCode.setFocusable(true);
@@ -156,7 +179,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 totalItems = 0; totalAmount = 0;
                 for (int i = 0; i < cartProductData.size(); i++) {
                     totalItems = cartProductData.size();
-                    totalAmount += cartProductData.get(i).getrPrice();
+                    totalAmount += cartProductData.get(i).getrPrice()*cartProductData.get(i).getQuantity();
                 }
                 tvTotalItems.setText("Total Item : "+totalItems);
                 tvTotalAmount.setText("Total Amount : "+totalAmount+"£");
@@ -170,7 +193,6 @@ public class EmployeeActivity extends AppCompatActivity {
 
                     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
 
-                    int finalI = i;
                     databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -188,7 +210,8 @@ public class EmployeeActivity extends AppCompatActivity {
                                 cartProductData.clear();
                                 recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
                                 tvNoData.setVisibility(View.VISIBLE);
-                                llDisplayItemData.setVisibility(View.GONE);
+                                llNoData.setVisibility(View.VISIBLE);
+                                llAddToCart.setVisibility(View.GONE);
                                 llBottom.setVisibility(View.GONE);
                                 totalAmount = 0;
                                 totalItems = 0;

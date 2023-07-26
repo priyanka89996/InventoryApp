@@ -14,11 +14,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin20"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/llCartData"
+                android:layout_margin="@dimen/margin20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -30,15 +30,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin10"
                     android:background="@drawable/edit_text_border_corner"
+                    android:cursorVisible="true"
                     android:focusable="true"
                     android:hint="@string/enterBarCodeNumber"
                     android:imeOptions="actionSearch"
-                    android:cursorVisible="true"
                     android:inputType="number"
                     android:maxLength="12"
                     android:padding="@dimen/padding15" />
 
                 <LinearLayout
+                    android:id="@+id/llAddtoCart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin10"
@@ -91,8 +92,8 @@
                                 android:id="@+id/btnAddToCart"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/white"
-                                android:text="@string/addToCart" />
+                                android:text="@string/addToCart"
+                                android:textColor="@color/white" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -108,27 +109,70 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <TextView
-                    android:id="@+id/tvNoDate"
+                <LinearLayout
+                    android:id="@+id/llNoData"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/margin5"
-                    android:layout_marginBottom="@dimen/margin10"
-                    android:gravity="center|center_horizontal"
-                    android:text="@string/noDataInCart"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/textsize_medium"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvNoDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margin5"
+                        android:layout_marginBottom="@dimen/margin10"
+                        android:gravity="center|center_horizontal"
+                        android:text="@string/noDataInCart"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_medium"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="50dp"
+                        android:src="@drawable/emptycart" />
+                </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnTill"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/llTill"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_gravity="center|center_horizontal"
-                android:text="Till" />
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnTill"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center|center_horizontal"
+                    android:background="@drawable/round_button"
+                    android:padding="@dimen/margin5"
+                    android:text="Till"
+                    android:textSize="@dimen/margin25"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/shopping"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </ScrollView>
 
@@ -136,39 +180,41 @@
         android:id="@+id/llBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin5"
-            android:paddingRight="@dimen/margin10"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/margin10"
-            android:orientation="horizontal">
+            android:paddingRight="@dimen/margin10">
 
             <TextView
                 android:id="@+id/tvTotalItems"
-                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Items : "/>
+                android:text="Total Items : "
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/tvTotalAmount"
-                android:textColor="@color/black"
-                android:gravity="right"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Amount : "/>
+                android:gravity="right"
+                android:text="Total Amount : "
+                android:textColor="@color/black" />
         </LinearLayout>
+
         <Button
             android:id="@+id/btnCheckoutItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/checkout"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

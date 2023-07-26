@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pi-venTo</string>
+    <string name="app_name">PIVENTO</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
@@ -23,4 +23,5 @@
     <string name="noDataInCart">No Item in Cart</string>
     <string name="noUser">User does not exist</string>
     <string name="addToCart">Add to Cart</string>
+    <string name="loginhere">Login Here</string>
 </resources>

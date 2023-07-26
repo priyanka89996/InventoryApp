@@ -4,19 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_margin="@dimen/margin20"
+    android:background="@color/white"
     android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical"
     tools:context=".LoginActivity">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="@dimen/margin20"
+        android:src="@drawable/loginimage"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin20"
-        android:gravity="center"
+        android:padding="@dimen/margin5"
         android:background="@drawable/edit_text_border_corner"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
@@ -34,23 +41,25 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@null"
-            android:text="employee1"
             android:hint="@string/enterusername"
             android:inputType="textPersonName"
             android:maxLength="10"
             android:padding="@dimen/margin10"
+            android:text="admin"
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin20"
-        android:gravity="center"
         android:background="@drawable/edit_text_border_corner"
+        android:gravity="center"
+        android:padding="@dimen/margin5"
         android:orientation="horizontal">
 
         <ImageView
@@ -70,14 +79,15 @@
             android:background="@null"
             android:hint="@string/enterpassword"
             android:inputType="textPassword"
-            android:text="p455w0rd"
             android:maxLength="10"
             android:padding="@dimen/margin10"
+            android:text="p455w0rd"
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/llLogin"
         android:layout_width="match_parent"
@@ -97,15 +107,16 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/tvError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin10"
         android:padding="@dimen/margin13"
         android:text="@string/noUser"
-        android:visibility="gone"
         android:textColor="@color/red"
-        android:layout_marginTop="@dimen/margin10"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
 </LinearLayout>

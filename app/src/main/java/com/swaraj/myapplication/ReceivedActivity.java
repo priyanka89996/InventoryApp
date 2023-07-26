@@ -1,6 +1,7 @@
 package com.swaraj.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +38,8 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_received);
-
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.titlebar);
         adapter = new ReceivedAdapter(ReceivedActivity.this);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
