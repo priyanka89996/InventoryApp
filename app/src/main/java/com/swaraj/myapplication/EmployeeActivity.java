@@ -39,18 +39,19 @@ public class EmployeeActivity extends AppCompatActivity {
     TextView tvProductName, tvNoData, tvRetailPrice, tvTotalItems, tvTotalAmount;
     Button btnTill, btnAddToCart, btnCheckout;
     RecyclerView recyclerView;
-    LinearLayout llCartData, llDisplayItemData, llBottom,llNoData, llAddToCart;
+    LinearLayout llCartData, llDisplayItemData, llBottom, llNoData, llAddToCart;
     ConstraintLayout llTill;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     DatabaseReference getEmployeeItems;
     DatabaseReference employeeItems;
-    ArrayList<ProductData> productData;
+    ArrayList<ProductData> productData, changedProductQuantity;
     ArrayList<ProductData> cartProductData;
     ProgressDialog progressDialog;
     Intent intent;
     String userName = "employee";
     int totalItems = 0, totalAmount = 0;
+    boolean threadTrigger = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,13 @@ public class EmployeeActivity extends AppCompatActivity {
         }
         cartProductData = new ArrayList<>();
         productData = new ArrayList<>();
+        changedProductQuantity = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("product");
         employeeItems = FirebaseDatabase.getInstance().getReference(userName);
         getEmployeeItems = FirebaseDatabase.getInstance().getReference(userName);
         progressDialog = new ProgressDialog(EmployeeActivity.this);
         etBarCode = findViewById(R.id.etBarCode);
-        etBarCode.requestFocus();
         tvProductName = findViewById(R.id.tvProductName);
         tvRetailPrice = findViewById(R.id.tvPrice);
         btnTill = findViewById(R.id.btnTill);
@@ -119,13 +120,14 @@ public class EmployeeActivity extends AppCompatActivity {
                         btnTill.setVisibility(View.GONE);
                         llTill.setVisibility(View.GONE);
                         progressDialog.dismiss();
-                        totalItems = 0; totalAmount = 0;
+                        totalItems = 0;
+                        totalAmount = 0;
                         for (int i = 0; i < cartProductData.size(); i++) {
                             totalItems = cartProductData.size();
                             totalAmount += cartProductData.get(i).getrPrice();
                         }
-                        tvTotalItems.setText("Total Item : "+totalItems);
-                        tvTotalAmount.setText("Total Amount : "+totalAmount+"£");
+                        tvTotalItems.setText("Total Item : " + totalItems);
+                        tvTotalAmount.setText("Total Amount : " + totalAmount + "£");
                     }
                 } else {
                     Log.d("notdata", "jaka");
@@ -160,14 +162,30 @@ public class EmployeeActivity extends AppCompatActivity {
                 llNoData.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 cartProductData.addAll(productData);
-                /*String barCode = cartProductData.get(cartProductData.size()-1).getBarCode();
-                for(int i=0;i<cartProductData.size();i++){
-                    if(cartProductData.get(i).getBarCode().equalsIgnoreCase(barCode)){
-                        cartProductData.get(i).setQuantity(cartProductData.get(i).getQuantity()+1);
-                        cartProductData.remove(cartProductData.size()-1);
+                String barCode = productData.get(0).getBarCode();
+                cartProductData.remove(cartProductData.size() - 1);
+                boolean checkExistRecord = false;
+                int changedItemValue = 0;
+                for (int i = 0; i < cartProductData.size(); i++) {
+                    if (cartProductData.get(i).getBarCode().equalsIgnoreCase(barCode)) {
+                        //cartProductData.remove(cartProductData.size()-1);
+                        cartProductData.get(i).setQuantity(cartProductData.get(i).getQuantity() + 1);
+                        changedItemValue = i;
+                        checkExistRecord = true;
+                        break;
+                    } else {
+                        //checkExistRecord = false;
                     }
-                }*/
-
+                }
+                if (!checkExistRecord) {
+                    cartProductData.addAll(productData);
+                    employeeItems.child(productData.get(0).getBarCode()).setValue(productData);
+                } else {
+                    Log.d("changedItemValue", "" + changedItemValue);
+                    changedProductQuantity.clear();
+                    changedProductQuantity.add(cartProductData.get(changedItemValue));
+                    employeeItems.child(productData.get(0).getBarCode()).setValue(changedProductQuantity);
+                }
                 recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
                 llDisplayItemData.setVisibility(View.GONE);
                 etBarCode.setFocusable(true);
@@ -175,14 +193,15 @@ public class EmployeeActivity extends AppCompatActivity {
                 etBarCode.setText("");
                 btnCheckout.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.VISIBLE);
-                employeeItems.child(productData.get(0).getBarCode()).setValue(productData);
-                totalItems = 0; totalAmount = 0;
+                //employeeItems.child(productData.get(0).getBarCode()).setValue(productData);
+                totalItems = 0;
+                totalAmount = 0;
                 for (int i = 0; i < cartProductData.size(); i++) {
                     totalItems = cartProductData.size();
-                    totalAmount += cartProductData.get(i).getrPrice()*cartProductData.get(i).getQuantity();
+                    totalAmount += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
                 }
-                tvTotalItems.setText("Total Item : "+totalItems);
-                tvTotalAmount.setText("Total Amount : "+totalAmount+"£");
+                tvTotalItems.setText("Total Item : " + totalItems);
+                tvTotalAmount.setText("Total Amount : " + totalAmount + "£");
             }
         });
         btnCheckout.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +212,7 @@ public class EmployeeActivity extends AppCompatActivity {
 
                     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
 
+                    int cartQuantity = cartProductData.get(i).getQuantity();
                     databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -201,7 +221,7 @@ public class EmployeeActivity extends AppCompatActivity {
                             productData.add(snapshot.getValue(ProductData.class));
                             if (productData != null) {
                                 Log.d("snapdata1", "" + productData.get(0).getQuantity());
-                                productData.get(0).setQuantity(productData.get(0).getQuantity() - 1);
+                                productData.get(0).setQuantity(productData.get(0).getQuantity() - cartQuantity);
                                 int quantity = productData.get(0).getQuantity();
                                 Log.d("snapdata2", "" + productData.get(0).getQuantity());
                                 DatabaseReference updateQuantity = FirebaseDatabase.getInstance().getReference("product").child(productData.get(0).getBarCode()).child("quantity");
@@ -212,6 +232,8 @@ public class EmployeeActivity extends AppCompatActivity {
                                 tvNoData.setVisibility(View.VISIBLE);
                                 llNoData.setVisibility(View.VISIBLE);
                                 llAddToCart.setVisibility(View.GONE);
+                                llDisplayItemData.setVisibility(View.GONE);
+                                threadTrigger = true;
                                 llBottom.setVisibility(View.GONE);
                                 totalAmount = 0;
                                 totalItems = 0;
@@ -230,6 +252,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 }
             }
         });
+
         etBarCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -287,7 +310,7 @@ public class EmployeeActivity extends AppCompatActivity {
                                 Integer.parseInt(postSnapshot.child("wPrice").getValue().toString()),
                                 Integer.parseInt(postSnapshot.child("rPrice").getValue().toString()),
                                 1,
-                                String.valueOf(postSnapshot.child("videoPath").getValue())));
+                                ""));
                         tvProductName.setText("" + String.valueOf(postSnapshot.child("name").getValue()));
                         tvRetailPrice.setText("Price : " + String.valueOf(postSnapshot.child("rPrice").getValue()));
 
@@ -300,6 +323,13 @@ public class EmployeeActivity extends AppCompatActivity {
                 if (isFound == true) {
                     if (productData.get(0).getQuantity() > 0) {
                         llDisplayItemData.setVisibility(View.VISIBLE);
+                        llCartData.setVisibility(View.VISIBLE);
+                        llAddToCart.setVisibility(View.VISIBLE);
+                        if (etBarCode.getText().toString().trim().equalsIgnoreCase("")) {
+                            llDisplayItemData.setVisibility(View.GONE);
+                            llAddToCart.setVisibility(View.GONE);
+                            threadTrigger = false;
+                        }
                     } else {
                         showToast("Stock is finished for this item");
                         //Toast.makeText(EmployeeActivity.this, "", Toast.LENGTH_SHORT).show();

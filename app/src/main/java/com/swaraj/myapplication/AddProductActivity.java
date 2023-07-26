@@ -3,15 +3,19 @@ package com.swaraj.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +23,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,9 +69,10 @@ public class AddProductActivity extends AppCompatActivity {
     private String mPermission = Manifest.permission.CAMERA;
     ProgressDialog videoProgress;
     Uri videoUri;
-    String barCode="";
+    String barCode = "";
     HashMap<String, String> map;
-    String uploadedVideoUrl="";
+    String uploadedVideoUrl = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +138,7 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 videoProgress = new ProgressDialog(AddProductActivity.this);
-                choosevideo();
+                chooseImageOptions();
             }
         });
 
@@ -155,11 +162,17 @@ public class AddProductActivity extends AppCompatActivity {
 
     }
 
-    private void choosevideo() {
+    private void chooseFromGallery() {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, 5);
+    }
+
+    private void chooseCamera() {
+        Intent i = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        // on below line starting an activity for result.
+        startActivityForResult(i, 555);
     }
 
     public String GetFileExtension(Uri uri) {
@@ -168,12 +181,14 @@ public class AddProductActivity extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
 
     }
+
     private String getfiletype(Uri videouri) {
         ContentResolver r = getContentResolver();
         // get the file type ,in this case its mp4
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(r.getType(videouri));
     }
+
     public void UploadImageFileToFirebaseStorage() {
 
         Log.d("pathuri", String.valueOf(FilePathUri));
@@ -299,6 +314,11 @@ public class AddProductActivity extends AppCompatActivity {
             videoProgress.setTitle("Uploading...");
             videoProgress.show();
             uploadvideo();
+        }else if (requestCode == 555) {
+            videoUri = data.getData();
+            videoProgress.setTitle("Uploading...");
+            videoProgress.show();
+            uploadvideo();
         }
     }
 
@@ -315,6 +335,48 @@ public class AddProductActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void chooseImageOptions() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.choose_camera_popup);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        TextView tvGallery = dialog.findViewById(R.id.tvGallery);
+        TextView tvCamera = dialog.findViewById(R.id.tvCamera);
+        AppCompatButton btnCancel = dialog.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        tvGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseFromGallery();
+                dialog.dismiss();
+            }
+        });
+
+        tvCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseCamera();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     private void uploadvideo() {
         if (videoUri != null) {
             // save the selected video in Firebase storage

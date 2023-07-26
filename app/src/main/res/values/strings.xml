@@ -24,4 +24,7 @@
     <string name="noUser">User does not exist</string>
     <string name="addToCart">Add to Cart</string>
     <string name="loginhere">Login Here</string>
+    <string name="GALLERY">gallery</string>
+    <string name="CAMERA">Camera</string>
+    <string name="text_cancel">cancel</string>
 </resources>
