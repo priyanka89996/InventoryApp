@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,6 +61,7 @@ public class EmployeeActivity extends AppCompatActivity {
     String userName = "employee";
     int totalItems = 0, totalAmount = 0;
     boolean threadTrigger = false;
+    Dialog loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,9 @@ public class EmployeeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnTill.setVisibility(View.GONE);
         llTill.setVisibility(View.GONE);
-        progressDialog.setTitle("Getting Cart Data...");
-        progressDialog.show();
+        showLoader("Getting Cart Data...");
+        //progressDialog.setTitle("Getting Cart Data...");
+        //progressDialog.show();
 
         getEmployeeItems.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -128,7 +131,8 @@ public class EmployeeActivity extends AppCompatActivity {
                         llCartData.setVisibility(View.VISIBLE);
                         btnTill.setVisibility(View.GONE);
                         llTill.setVisibility(View.GONE);
-                        progressDialog.dismiss();
+                        loader.dismiss();
+                        //progressDialog.dismiss();
                         totalItems = 0;
                         totalAmount = 0;
                         for (int i = 0; i < cartProductData.size(); i++) {
@@ -142,7 +146,8 @@ public class EmployeeActivity extends AppCompatActivity {
                     Log.d("notdata", "jaka");
                     btnTill.setVisibility(View.VISIBLE);
                     llTill.setVisibility(View.VISIBLE);
-                    progressDialog.dismiss();
+                    loader.dismiss();
+                    ///progressDialog.dismiss();
                 }
             }
 
@@ -261,7 +266,7 @@ public class EmployeeActivity extends AppCompatActivity {
         });
     }
 
-    public void checkOutData(){
+    public void checkOutData() {
         for (int i = 0; i < cartProductData.size(); i++) {
 
             DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
@@ -296,6 +301,7 @@ public class EmployeeActivity extends AppCompatActivity {
                         etBarCode.requestFocus();
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
+                        Toast.makeText(EmployeeActivity.this, "Order Successfully", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -310,8 +316,9 @@ public class EmployeeActivity extends AppCompatActivity {
 
     public void getData(String barCode) {
 
-        progressDialog.setTitle("Getting Product Data...");
-        progressDialog.show();
+        showLoader("Getting Product Data...");
+        //progressDialog.setTitle("Getting Product Data...");
+        //progressDialog.show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -366,7 +373,8 @@ public class EmployeeActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.GONE);
                     tvNoData.setVisibility(View.VISIBLE);
                 }*/
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
+                loader.dismiss();
             }
 
             @Override
@@ -399,10 +407,14 @@ public class EmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                etBarCode.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
             }
         });
         dialog.show();
     }
+
     public void orderSummery() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -417,7 +429,7 @@ public class EmployeeActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
-        int quantity=0,price=0;
+        int quantity = 0, price = 0;
         TextView tvTotalItem = (TextView) dialog.findViewById(R.id.tvTotalItems);
         TextView tvTotalAmount = (TextView) dialog.findViewById(R.id.tvTotalAmount);
         TextView tvTotalQuantity = (TextView) dialog.findViewById(R.id.tvTotalQuantity);
@@ -425,14 +437,14 @@ public class EmployeeActivity extends AppCompatActivity {
         Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
         RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.rvProductSummery);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new OrderSummeryAdapter(this,cartProductData));
-        tvTotalItem.setText("Total Items : "+cartProductData.size());
-        for(int i=0;i<cartProductData.size();i++){
+        recyclerView.setAdapter(new OrderSummeryAdapter(this, cartProductData));
+        tvTotalItem.setText("Total Items : " + cartProductData.size());
+        for (int i = 0; i < cartProductData.size(); i++) {
             quantity += cartProductData.get(i).getQuantity();
-            price += cartProductData.get(i).getrPrice()*cartProductData.get(i).getQuantity();
+            price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
         }
-        tvTotalQuantity.setText("Total Quantity : "+quantity);
-        tvTotalAmount.setText("Total Amount : "+price);
+        tvTotalQuantity.setText("Total Quantity : " + quantity);
+        tvTotalAmount.setText("Total Amount : " + price);
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,5 +460,24 @@ public class EmployeeActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    public void showLoader(String title) {
+        loader = new Dialog(EmployeeActivity.this);
+
+        loader.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loader.setContentView(R.layout.custom_loader_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(loader.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) loader.findViewById(R.id.tvMessage);
+        tvMessage.setText("" + title);
+        loader.getWindow().setAttributes(lp);
+        loader.setCancelable(false);
+        loader.setCanceledOnTouchOutside(false);
+        loader.show();
+
     }
 }

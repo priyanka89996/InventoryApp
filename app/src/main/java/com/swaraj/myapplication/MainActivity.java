@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<ProductData> productData;
-    ProgressDialog progressDialog;
-    int totalStockValue=0;
+    int totalStockValue = 0;
     ImageView ivAudio;
     DialogBoxPopup dialog;
+    Dialog loader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         dialog = new DialogBoxPopup();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("product");
-        progressDialog = new ProgressDialog(MainActivity.this);
         recyclerView = findViewById(R.id.rvProductList);
         btnRestock = findViewById(R.id.btnRestock);
         btnReceivedStock = findViewById(R.id.btnReceivedStock);
@@ -102,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getData() {
         productData = new ArrayList<>();
-        progressDialog.setTitle("Getting Product Data...");
-        progressDialog.show();
+        showLoader("Getting Product Data...");
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -128,13 +131,14 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.VISIBLE);
                     tvNoDate.setVisibility(View.GONE);
                     tvTotalStock.setVisibility(View.VISIBLE);
-                    tvTotalStock.setText("Total Stock Value \n"+totalStockValue+"£");
+                    tvTotalStock.setText("Total Stock Value \n" + totalStockValue + "£");
                 } else {
                     recyclerView.setVisibility(View.GONE);
                     tvNoDate.setVisibility(View.VISIBLE);
                     tvTotalStock.setVisibility(View.GONE);
                 }
-                progressDialog.dismiss();
+
+                loader.dismiss();
             }
 
             @Override
@@ -142,5 +146,24 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showLoader(String title) {
+        loader = new Dialog(MainActivity.this);
+
+        loader.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loader.setContentView(R.layout.custom_loader_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(loader.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) loader.findViewById(R.id.tvMessage);
+        tvMessage.setText("" + title);
+        loader.getWindow().setAttributes(lp);
+        loader.setCancelable(false);
+        loader.setCanceledOnTouchOutside(false);
+        loader.show();
+
     }
 }

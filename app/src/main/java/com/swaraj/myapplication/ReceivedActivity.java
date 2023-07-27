@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +33,9 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference, updateRecordRef;
     ArrayList<ProductData> productData;
-    ProgressDialog progressDialog;
     UpdateProductInterface productInterface;
     ReceivedAdapter adapter;
-
+    Dialog loader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,15 +47,14 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("placedOrders");
         updateRecordRef = firebaseDatabase.getReference("product");
-        progressDialog = new ProgressDialog(ReceivedActivity.this);
         recyclerView = findViewById(R.id.rvReceivedOrder);
         tvNoDate = findViewById(R.id.tvNoDate);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         productInterface = new UpdateProductInterface() {
             @Override
             public void onClick(ProductData product, int position) {
-                progressDialog.setTitle("Getting Order...");
-                progressDialog.show();
+                showLoader("Getting Order Data...");
+
                 Log.d("updateStock", "" + product.getQuantity());
                 updateRecordRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -69,12 +70,12 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
                                 break;
                             }
                         }
-                        progressDialog.dismiss();
+                        loader.dismiss();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        progressDialog.dismiss();
+                        loader.dismiss();
                     }
                 });
 
@@ -98,8 +99,7 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
 
     public void getData() {
         productData = new ArrayList<>();
-        progressDialog.setTitle("Getting Product Data...");
-        progressDialog.show();
+        showLoader("Getting Order Data...");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -124,7 +124,7 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
                     recyclerView.setVisibility(View.GONE);
                     tvNoDate.setVisibility(View.VISIBLE);
                 }
-                progressDialog.dismiss();
+                loader.dismiss();
             }
 
             @Override
@@ -141,6 +141,24 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
     @Override
     public void onClick(ProductData productData, int po) {
         Log.d("received", "" + productData.getName());
+    }
+    public void showLoader(String title) {
+        loader = new Dialog(ReceivedActivity.this);
+
+        loader.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loader.setContentView(R.layout.custom_loader_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(loader.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) loader.findViewById(R.id.tvMessage);
+        tvMessage.setText("" + title);
+        loader.getWindow().setAttributes(lp);
+        loader.setCancelable(false);
+        loader.setCanceledOnTouchOutside(false);
+        loader.show();
+
     }
 
 }

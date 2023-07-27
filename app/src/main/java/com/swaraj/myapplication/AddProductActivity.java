@@ -63,16 +63,16 @@ public class AddProductActivity extends AppCompatActivity {
     String Database_Path = "product";
     StorageReference storageReference;
     DatabaseReference databaseReference;
-    ProgressDialog progressDialog;
     Uri FilePathUri;
     TextView tvWholeSalePrice, tvRetailPrice, tvQuantity;
     private String mPermission = Manifest.permission.CAMERA;
-    ProgressDialog videoProgress;
     Uri videoUri;
     String barCode = "";
     HashMap<String, String> map;
     String uploadedVideoUrl = "";
     DialogBoxPopup dialog;
+    Dialog loader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +118,6 @@ public class AddProductActivity extends AppCompatActivity {
         });
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path);
-        progressDialog = new ProgressDialog(AddProductActivity.this);
 
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +140,6 @@ public class AddProductActivity extends AppCompatActivity {
         ivUploadVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoProgress = new ProgressDialog(AddProductActivity.this);
                 chooseImageOptions();
             }
         });
@@ -200,10 +198,7 @@ public class AddProductActivity extends AppCompatActivity {
         if (FilePathUri != null) {
 
             // Setting progressDialog Title.
-            progressDialog.setTitle("Data is Uploading...");
-
-            // Showing progressDialog.
-            progressDialog.show();
+            showLoader("Data is Uploading...");
 
             // Creating second StorageReference.
             StorageReference storageReference2nd = storageReference.child(Storage_Path + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri));
@@ -216,7 +211,7 @@ public class AddProductActivity extends AppCompatActivity {
                             storageReference2nd.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    progressDialog.dismiss();
+                                    loader.dismiss();
 
                                     // Showing toast message after done uploading.
                                     Toast.makeText(getApplicationContext(), "Data Uploaded Successfully ", Toast.LENGTH_LONG).show();
@@ -238,8 +233,7 @@ public class AddProductActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception exception) {
 
                             // Hiding the progressDialog.
-                            progressDialog.dismiss();
-
+                            loader.dismiss();
                             // Showing exception erro message.
                             Toast.makeText(AddProductActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
                         }
@@ -251,12 +245,13 @@ public class AddProductActivity extends AppCompatActivity {
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
 
                             // Setting progressDialog Title.
-                            progressDialog.setTitle("Data is Uploading...");
+                            loader.dismiss();
+                            showLoader("Data is Uploading...");
 
                         }
                     });
         } else {
-            dialog.showToast("Please Select Image or Add Image Name",AddProductActivity.this);
+            dialog.showToast("Please Select Image or Add Image Name", AddProductActivity.this);
             //Toast.makeText(AddProductActivity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
 
         }
@@ -315,13 +310,15 @@ public class AddProductActivity extends AppCompatActivity {
             }
         } else if (requestCode == 5) {
             videoUri = data.getData();
-            videoProgress.setTitle("Uploading...");
-            videoProgress.show();
+            showLoader("Uploading Video...");
+            //videoProgress.setTitle("Uploading...");
+            //videoProgress.show();
             uploadvideo();
-        }else if (requestCode == 555) {
+        } else if (requestCode == 555) {
             videoUri = data.getData();
-            videoProgress.setTitle("Uploading...");
-            videoProgress.show();
+            showLoader("Uploading Video...");
+            //videoProgress.setTitle("Uploading...");
+            //videoProgress.show();
             uploadvideo();
         }
     }
@@ -400,14 +397,14 @@ public class AddProductActivity extends AppCompatActivity {
                     //databaseReference.child(barCode).child("videoPath").setValue(map);
                     // Video uploaded successfully
                     // Dismiss dialog
-                    videoProgress.dismiss();
+                    loader.dismiss();
                     Toast.makeText(AddProductActivity.this, "Video Uploaded!!", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // Error, Image not uploaded
-                    videoProgress.dismiss();
+                    loader.dismiss();
                     Toast.makeText(AddProductActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -417,9 +414,29 @@ public class AddProductActivity extends AppCompatActivity {
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     // show the progress bar
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    videoProgress.setMessage("Uploaded " + (int) progress + "%");
+                    loader.dismiss();
+                    showLoader("Uploaded " + (int) progress + "%");
                 }
             });
         }
+    }
+
+    public void showLoader(String title) {
+        loader = new Dialog(AddProductActivity.this);
+
+        loader.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loader.setContentView(R.layout.custom_loader_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(loader.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) loader.findViewById(R.id.tvMessage);
+        tvMessage.setText("" + title);
+        loader.getWindow().setAttributes(lp);
+        loader.setCancelable(false);
+        loader.setCanceledOnTouchOutside(false);
+        loader.show();
+
     }
 }

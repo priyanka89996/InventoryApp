@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +37,9 @@ public class RestockActivity extends AppCompatActivity {
     ArrayList<ProductData> productData;
     ArrayList<ProductData> temProductData;
     ArrayList<Integer> arrQuantity;
-    ProgressDialog progressDialog;
     DialogBoxPopup dialog;
+    Dialog loader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +48,7 @@ public class RestockActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.titlebar);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("product");
-        progressDialog = new ProgressDialog(RestockActivity.this);
+
         recyclerView = findViewById(R.id.rvRestockList);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
         tvNoData = findViewById(R.id.tvNoDate);
@@ -56,15 +60,15 @@ public class RestockActivity extends AppCompatActivity {
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.setTitle("Placing Order...");
-                progressDialog.show();
+                showLoader("Placing Order...");
+
                 for (int i = 0; i < productData.size(); i++) {
 
                     if (arrQuantity.get(i) != productData.get(i).getQuantity()) {
                         Log.d("updated order", "" + productData.get(i).getName());
                         databaseReference = FirebaseDatabase.getInstance().getReference("placedOrders");
-                        ProductData ProductData = new ProductData(productData.get(i).getName(),productData.get(i).getBarCode(),
-                                productData.get(i).getImagePath(),productData.get(i).getwPrice(),productData.get(i).getrPrice(),productData.get(i).getQuantity(),productData.get(i).getVideoPath());
+                        ProductData ProductData = new ProductData(productData.get(i).getName(), productData.get(i).getBarCode(),
+                                productData.get(i).getImagePath(), productData.get(i).getwPrice(), productData.get(i).getrPrice(), productData.get(i).getQuantity(), productData.get(i).getVideoPath());
 
                         // Adding image upload id s child element into databaseReference.
                         databaseReference.child(productData.get(i).getBarCode()).setValue(ProductData);
@@ -73,9 +77,9 @@ public class RestockActivity extends AppCompatActivity {
                         Log.d("not order", "" + productData.get(i).getName());
                     }
                 }
+                loader.dismiss();
                 Toast.makeText(RestockActivity.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
                 finish();
-                progressDialog.dismiss();
 
             }
         });
@@ -84,8 +88,8 @@ public class RestockActivity extends AppCompatActivity {
     public void getData() {
         productData = new ArrayList<>();
         arrQuantity = new ArrayList<>();
-        progressDialog.setTitle("Getting Product Data...");
-        progressDialog.show();
+        showLoader("Getting Product Data...");
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -113,7 +117,7 @@ public class RestockActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.GONE);
                     tvNoData.setVisibility(View.VISIBLE);
                 }
-                progressDialog.dismiss();
+                loader.dismiss();
             }
 
             @Override
@@ -121,5 +125,24 @@ public class RestockActivity extends AppCompatActivity {
                 Toast.makeText(RestockActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showLoader(String title) {
+        loader = new Dialog(RestockActivity.this);
+
+        loader.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loader.setContentView(R.layout.custom_loader_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(loader.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        TextView tvMessage = (TextView) loader.findViewById(R.id.tvMessage);
+        tvMessage.setText("" + title);
+        loader.getWindow().setAttributes(lp);
+        loader.setCancelable(false);
+        loader.setCanceledOnTouchOutside(false);
+        loader.show();
+
     }
 }
