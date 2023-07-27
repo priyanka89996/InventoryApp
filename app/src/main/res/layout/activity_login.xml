@@ -45,7 +45,7 @@
             android:inputType="textPersonName"
             android:maxLength="10"
             android:padding="@dimen/margin10"
-            android:text="admin"
+            android:text=""
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />
@@ -81,7 +81,7 @@
             android:inputType="textPassword"
             android:maxLength="10"
             android:padding="@dimen/margin10"
-            android:text="p455w0rd"
+            android:text=""
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />
