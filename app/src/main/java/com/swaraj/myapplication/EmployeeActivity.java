@@ -36,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.swaraj.myapplication.adapter.EmployeeAdapter;
+import com.swaraj.myapplication.adapter.OrderSummeryAdapter;
 import com.swaraj.myapplication.data.ProductData;
 
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 btnCheckout.setVisibility(View.GONE);
                 llBottom.setVisibility(View.GONE);
                 etBarCode.requestFocus();
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
             }
         });
@@ -201,7 +202,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 llDisplayItemData.setVisibility(View.GONE);
                 etBarCode.setFocusable(true);
                 etBarCode.requestFocus();
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
                 etBarCode.setText("");
                 btnCheckout.setVisibility(View.VISIBLE);
@@ -221,48 +222,7 @@ public class EmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                for (int i = 0; i < cartProductData.size(); i++) {
-
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
-
-                    int cartQuantity = cartProductData.get(i).getQuantity();
-                    databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            productData.clear();
-
-                            productData.add(snapshot.getValue(ProductData.class));
-                            if (productData != null) {
-                                Log.d("snapdata1", "" + productData.get(0).getQuantity());
-                                productData.get(0).setQuantity(productData.get(0).getQuantity() - cartQuantity);
-                                int quantity = productData.get(0).getQuantity();
-                                Log.d("snapdata2", "" + productData.get(0).getQuantity());
-                                DatabaseReference updateQuantity = FirebaseDatabase.getInstance().getReference("product").child(productData.get(0).getBarCode()).child("quantity");
-                                updateQuantity.setValue(quantity);
-                                employeeItems.child(productData.get(0).getBarCode()).removeValue();
-                                cartProductData.clear();
-                                recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
-                                tvNoData.setVisibility(View.VISIBLE);
-                                llNoData.setVisibility(View.VISIBLE);
-                                llAddToCart.setVisibility(View.GONE);
-                                llDisplayItemData.setVisibility(View.GONE);
-                                threadTrigger = true;
-                                llBottom.setVisibility(View.GONE);
-                                totalAmount = 0;
-                                totalItems = 0;
-                                etBarCode.setText("");
-                                etBarCode.setFocusable(true);
-                                etBarCode.requestFocus();
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
+                orderSummery();
             }
         });
 
@@ -301,6 +261,52 @@ public class EmployeeActivity extends AppCompatActivity {
         });
     }
 
+    public void checkOutData(){
+        for (int i = 0; i < cartProductData.size(); i++) {
+
+            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
+
+            int cartQuantity = cartProductData.get(i).getQuantity();
+            databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    productData.clear();
+
+                    productData.add(snapshot.getValue(ProductData.class));
+                    if (productData != null) {
+                        Log.d("snapdata1", "" + productData.get(0).getQuantity());
+                        productData.get(0).setQuantity(productData.get(0).getQuantity() - cartQuantity);
+                        int quantity = productData.get(0).getQuantity();
+                        Log.d("snapdata2", "" + productData.get(0).getQuantity());
+                        DatabaseReference updateQuantity = FirebaseDatabase.getInstance().getReference("product").child(productData.get(0).getBarCode()).child("quantity");
+                        updateQuantity.setValue(quantity);
+                        employeeItems.child(productData.get(0).getBarCode()).removeValue();
+                        cartProductData.clear();
+                        recyclerView.setAdapter(new EmployeeAdapter(EmployeeActivity.this, cartProductData));
+                        tvNoData.setVisibility(View.VISIBLE);
+                        llNoData.setVisibility(View.VISIBLE);
+                        llAddToCart.setVisibility(View.GONE);
+                        llDisplayItemData.setVisibility(View.GONE);
+                        threadTrigger = true;
+                        llBottom.setVisibility(View.GONE);
+                        totalAmount = 0;
+                        totalItems = 0;
+                        etBarCode.setText("");
+                        etBarCode.setFocusable(true);
+                        etBarCode.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(etBarCode, InputMethodManager.SHOW_IMPLICIT);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
 
     public void getData(String barCode) {
 
@@ -392,6 +398,52 @@ public class EmployeeActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void orderSummery() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.product_summery);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        int quantity=0,price=0;
+        TextView tvTotalItem = (TextView) dialog.findViewById(R.id.tvTotalItems);
+        TextView tvTotalAmount = (TextView) dialog.findViewById(R.id.tvTotalAmount);
+        TextView tvTotalQuantity = (TextView) dialog.findViewById(R.id.tvTotalQuantity);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
+        RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.rvProductSummery);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new OrderSummeryAdapter(this,cartProductData));
+        tvTotalItem.setText("Total Items : "+cartProductData.size());
+        for(int i=0;i<cartProductData.size();i++){
+            quantity += cartProductData.get(i).getQuantity();
+            price += cartProductData.get(i).getrPrice()*cartProductData.get(i).getQuantity();
+        }
+        tvTotalQuantity.setText("Total Quantity : "+quantity);
+        tvTotalAmount.setText("Total Amount : "+price);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkOutData();
                 dialog.dismiss();
             }
         });

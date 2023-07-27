@@ -38,4 +38,7 @@
     <string name="play_recording">Play Recording</string>
     <string name="stop_playing">Stop Playing</string>
     <string name="status">Status</string>
+    <string name="confirm">Confirm</string>
+    <string name="cencel">Cancel</string>
+    <string name="summery">Product Summery</string>
 </resources>
