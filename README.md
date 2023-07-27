@@ -1,0 +1,8 @@
+# InventoryApp![Screenshot_2023-07-27-22-15-06-765_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/d2238a3f-d074-4bdd-b2be-688bdbd68bd3)
+![Screenshot_2023-07-27-22-15-18-689_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/bc003b51-8a56-4c6a-bb21-7dee0d1ef7f8)
+![Screenshot_2023-07-27-22-15-27-805_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/8b3afa73-3290-46ff-a3ef-0b6262f50a47)
+![Screenshot_2023-07-27-22-15-45-539_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/7ad02113-6fa3-4a97-a1b7-1f39eb7a2548)
+![Screenshot_2023-07-27-22-15-54-595_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/9f3715f7-c5fb-4799-9c30-b505d9b17ab7)
+![Screenshot_2023-07-27-22-16-14-644_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/6a1422e5-ab25-4eab-b891-aa2a9edc28c9)
+![Screenshot_2023-07-27-22-16-31-592_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/61990d01-6202-4728-b94e-afd773500d38)
+![Screenshot_2023-07-27-22-16-35-988_com swaraj myapplication](https://github.com/priyanka89996/InventoryApp/assets/140529667/7d66bcaf-fd72-4c11-b244-3c8551b3a7a1)
