@@ -39,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     int totalStockValue=0;
     ImageView ivAudio;
-
+    DialogBoxPopup dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.titlebar);
-
+        dialog = new DialogBoxPopup();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("product");
         progressDialog = new ProgressDialog(MainActivity.this);

@@ -16,11 +16,13 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUserName, etPassword;
     LinearLayout btnLogin;
     TextView tvError;
+    DialogBoxPopup dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        dialog = new DialogBoxPopup();
         etUserName = findViewById(R.id.etUserName);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.llLogin);
@@ -33,9 +35,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(etUserName.getText().toString().trim().equalsIgnoreCase("")){
                     tvError.setVisibility(View.GONE);
-                    Toast.makeText(LoginActivity.this, "Enter user name", Toast.LENGTH_SHORT).show();
+                    dialog.showToast("Enter user name", LoginActivity.this);
+                    //Toast.makeText(LoginActivity.this, "Enter user name", Toast.LENGTH_SHORT).show();
                 }else if(etPassword.getText().toString().trim().equalsIgnoreCase("")){
-                    Toast.makeText(LoginActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    dialog.showToast("Enter password",LoginActivity.this);
+                    //Toast.makeText(LoginActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
                 }else if(etUserName.getText().toString().trim().equalsIgnoreCase("admin") && etPassword.getText().toString().trim().equalsIgnoreCase("p455w0rd")){
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 }else if(etUserName.getText().toString().trim().equalsIgnoreCase("employee1") && etPassword.getText().toString().trim().equalsIgnoreCase("p455w0rd")){

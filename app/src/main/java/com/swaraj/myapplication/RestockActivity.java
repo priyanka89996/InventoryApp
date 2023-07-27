@@ -35,7 +35,7 @@ public class RestockActivity extends AppCompatActivity {
     ArrayList<ProductData> temProductData;
     ArrayList<Integer> arrQuantity;
     ProgressDialog progressDialog;
-
+    DialogBoxPopup dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +48,7 @@ public class RestockActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvRestockList);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
         tvNoData = findViewById(R.id.tvNoDate);
+        dialog = new DialogBoxPopup();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getData();

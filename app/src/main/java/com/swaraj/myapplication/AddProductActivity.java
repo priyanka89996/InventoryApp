@@ -72,13 +72,14 @@ public class AddProductActivity extends AppCompatActivity {
     String barCode = "";
     HashMap<String, String> map;
     String uploadedVideoUrl = "";
-
+    DialogBoxPopup dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.titlebar);
+        dialog = new DialogBoxPopup();
         etBarCode = findViewById(R.id.etBarCode);
         etProductName = findViewById(R.id.etProductName);
         npWPrice = findViewById(R.id.npWholesalePrice);
@@ -123,11 +124,14 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (etBarCode.getText().toString().toString().equalsIgnoreCase("")) {
-                    Toast.makeText(AddProductActivity.this, "Enter Bar Code Number", Toast.LENGTH_SHORT).show();
+                    dialog.showToast("Enter Bar Code Number", AddProductActivity.this);
+                    //Toast.makeText(AddProductActivity.this, "Enter Bar Code Number", Toast.LENGTH_SHORT).show();
                 } else if (etBarCode.getText().toString().trim().length() < 12) {
-                    Toast.makeText(AddProductActivity.this, "Enter Correct Bar Code Number", Toast.LENGTH_SHORT).show();
+                    dialog.showToast("Enter Correct Bar Code Number", AddProductActivity.this);
+                    //Toast.makeText(AddProductActivity.this, "Enter Correct Bar Code Number", Toast.LENGTH_SHORT).show();
                 } else if (etProductName.getText().toString().trim().equalsIgnoreCase("")) {
-                    Toast.makeText(AddProductActivity.this, "Enter Product Name", Toast.LENGTH_SHORT).show();
+                    dialog.showToast("Enter Product Name", AddProductActivity.this);
+                    //Toast.makeText(AddProductActivity.this, "Enter Product Name", Toast.LENGTH_SHORT).show();
                 } else {
                     barCode = etBarCode.getText().toString().trim();
                     UploadImageFileToFirebaseStorage();
@@ -252,8 +256,8 @@ public class AddProductActivity extends AppCompatActivity {
                         }
                     });
         } else {
-
-            Toast.makeText(AddProductActivity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
+            dialog.showToast("Please Select Image or Add Image Name",AddProductActivity.this);
+            //Toast.makeText(AddProductActivity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
 
         }
     }
