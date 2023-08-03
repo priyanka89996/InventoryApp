@@ -52,7 +52,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 .centerCrop()
                 .into(holder.productImage);
         holder.tvProductName.setText(data.getName().toUpperCase());
-        holder.tvWPrice.setText("Wholesale Price : "+data.getwPrice()+"£");
+        holder.tvWPrice.setText("Wholesale Price : "+data.getwPrice()+"£ barcode:"+data.getBarCode());
         holder.tvRPrice.setText("Retail Price : "+data.getrPrice()+"£");
         holder.tvQuantity.setText("Quantity : "+data.getQuantity());
         if(data.getQuantity() <= 5){
