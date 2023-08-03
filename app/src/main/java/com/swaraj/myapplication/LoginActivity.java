@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(user.IsAdmin){
                                     showAdminActivity();
                                 }else {
-                                    showEmployeeActivity();
+                                    showEmployeeActivity(user.FirstName);
                                 }
 
                             }
@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 if(user.IsAdmin){
                                                     showAdminActivity();
                                                 }else {
-                                                    showEmployeeActivity();
+                                                    showEmployeeActivity(user.FirstName);
                                                 }
 
                                             }
@@ -154,11 +154,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void showEmployeeActivity() {
+    private void showEmployeeActivity(String name) {
         Toast.makeText(LoginActivity.this, "logged In",
                 Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, EmployeeActivity.class);
-        intent.putExtra("name","employee1");
+        intent.putExtra("name",name);
         startActivity(intent);
         finish();
     }

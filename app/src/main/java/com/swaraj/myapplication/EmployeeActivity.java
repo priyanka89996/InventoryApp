@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +50,7 @@ public class EmployeeActivity extends AppCompatActivity {
 
     EditText etBarCode;
     TextView tvProductName, tvNoData, tvRetailPrice, tvTotalItems, tvTotalAmount;
-    Button btnTill, btnAddToCart, btnCheckout;
+    Button btnTill, btnAddToCart, btnCheckout, btnLogout;
     RecyclerView recyclerView;
     LinearLayout llCartData, llDisplayItemData, llBottom, llNoData, llAddToCart;
     ConstraintLayout llTill;
@@ -69,6 +71,16 @@ public class EmployeeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.titlebar);
         intent = getIntent();
@@ -103,6 +115,8 @@ public class EmployeeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnTill.setVisibility(View.GONE);
         llTill.setVisibility(View.GONE);
+        btnLogout = findViewById(R.id.BtnLogout);
+        btnLogout.setVisibility(View.VISIBLE);
         showLoader("Getting Cart Data...");
         //progressDialog.setTitle("Getting Cart Data...");
         //progressDialog.show();
@@ -158,6 +172,14 @@ public class EmployeeActivity extends AppCompatActivity {
 
             }
         });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logoutUser();
+            }
+        });
+
         btnTill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -514,5 +536,12 @@ public class EmployeeActivity extends AppCompatActivity {
         loader.setCanceledOnTouchOutside(false);
         loader.show();
 
+    }
+
+    private void logoutUser() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
