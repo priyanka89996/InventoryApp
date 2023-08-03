@@ -7,11 +7,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -38,9 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.swaraj.myapplication.adapter.EmployeeAdapter;
 import com.swaraj.myapplication.adapter.OrderSummeryAdapter;
+import com.swaraj.myapplication.data.OrderData;
 import com.swaraj.myapplication.data.ProductData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EmployeeActivity extends AppCompatActivity {
 
@@ -279,10 +281,11 @@ public class EmployeeActivity extends AppCompatActivity {
 
                     productData.add(snapshot.getValue(ProductData.class));
                     if (productData != null) {
-                        Log.d("snapdata1", "" + productData.get(0).getQuantity());
+
+                        //Log.d("snapdata1", "" + productData.get(0).getQuantity());
                         productData.get(0).setQuantity(productData.get(0).getQuantity() - cartQuantity);
                         int quantity = productData.get(0).getQuantity();
-                        Log.d("snapdata2", "" + productData.get(0).getQuantity());
+                        //Log.d("snapdata2", "" + productData.get(0).getQuantity());
                         DatabaseReference updateQuantity = FirebaseDatabase.getInstance().getReference("product").child(productData.get(0).getBarCode()).child("quantity");
                         updateQuantity.setValue(quantity);
                         employeeItems.child(productData.get(0).getBarCode()).removeValue();
@@ -455,11 +458,43 @@ public class EmployeeActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                recordData();
                 checkOutData();
                 dialog.dismiss();
             }
         });
         dialog.show();
+    }
+
+    private void recordData(){
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("placedOrders");
+        int quantity = 0;
+        int price = 0;
+        List<OrderData> basketItems = new ArrayList<>();
+        for (int i = 0; i < cartProductData.size(); i++) {
+            quantity += cartProductData.get(i).getQuantity();
+            price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+            basketItems.add(new OrderData( cartProductData.get(i).getName(), cartProductData.get(i).getBarCode(), cartProductData.get(i).getrPrice(),
+                    cartProductData.get(i).getQuantity()));
+
+        }
+
+
+        Map<String, Object> basketMap = new HashMap<>();
+        for (int i = 0; i < basketItems.size(); i++) {
+            OrderData item = basketItems.get(i);
+            Map<String, Object> itemMap = new HashMap<>();
+            itemMap.put("Name", item.getName());
+            itemMap.put("Barcode", item.getBarCode());
+            itemMap.put("Price", item.getrPrice());
+            itemMap.put("Quantity", item.getQuantity());
+            basketMap.put("Item " + (i + 1), itemMap);
+        }
+        basketMap.put("TotalCost", price);
+        basketMap.put("TotalQuantity", quantity);
+
+        databaseReference2.push().setValue(basketMap);
+
     }
 
     public void showLoader(String title) {
