@@ -66,7 +66,7 @@ public class RestockActivity extends AppCompatActivity {
 
                     if (arrQuantity.get(i) != productData.get(i).getQuantity()) {
                         Log.d("updated order", "" + productData.get(i).getName());
-                        databaseReference = FirebaseDatabase.getInstance().getReference("placedOrders");
+                        databaseReference = FirebaseDatabase.getInstance().getReference("RestockOrders");
                         ProductData ProductData = new ProductData(productData.get(i).getName(), productData.get(i).getBarCode(),
                                 productData.get(i).getImagePath(), productData.get(i).getwPrice(), productData.get(i).getrPrice(), productData.get(i).getQuantity(), productData.get(i).getVideoPath());
 

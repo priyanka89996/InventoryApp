@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "891390116138",
+    "firebase_url": "https://mystockapp-2e88d-default-rtdb.firebaseio.com",
     "project_id": "mystockapp-2e88d",
     "storage_bucket": "mystockapp-2e88d.appspot.com"
   },

@@ -13,8 +13,8 @@
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="@dimen/margin20"
-        android:src="@drawable/loginimage"/>
+        android:layout_marginBottom="@dimen/margin5"
+        android:src="@drawable/loginimage" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:src="@drawable/ic_baseline_person_24" />
 
         <EditText
-            android:id="@+id/etUserName"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -66,10 +66,56 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/margin20"
+            android:src="@drawable/ic_baseline_person_24" />
+
+        <EditText
+            android:id="@+id/etUsernameReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/enterusername"
+            android:inputType="text"
+            android:padding="@dimen/margin10"
+            android:text=""
+            android:textColor="@color/black"
+            android:textColorHint="#B6B6B6"
+            android:textSize="@dimen/textsize_normal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin10"
+        android:padding="@dimen/margin13"
+        android:text="@string/noUser"
+        android:textColor="@color/red"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin20"
+        android:background="@drawable/edit_text_border_corner"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin5">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin20"
             android:src="@drawable/ic_baseline_lock_24" />
 
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etPasswordReg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -87,38 +133,40 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin25"
-        android:background="@color/purple_200"
-        android:gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin20"
+        android:background="@drawable/edit_text_border_corner"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin5">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin13"
-            android:text="@string/login"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin20"
+            android:src="@drawable/baseline_admin_panel_settings_24" />
+
+        <Switch
+            android:id="@+id/aSwitch"
+            android:layout_width="277dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:maxWidth="@dimen/margin2"
+            android:switchMinWidth="75dp"
+            android:text="Admin" />
+
+        <Space
+            android:layout_width="342dp"
+            android:layout_height="34dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin10"
-        android:padding="@dimen/margin13"
-        android:text="@string/noUser"
-        android:textColor="@color/red"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
     <LinearLayout
-        android:id="@+id/OpenRegister"
+        android:id="@+id/Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin25"
@@ -130,6 +178,26 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/margin13"
             android:text="Register"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/BackLogin"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_marginTop="@dimen/margin25"
+        android:background="@color/purple_200"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin13"
+            android:text="Back to Login"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="15sp"

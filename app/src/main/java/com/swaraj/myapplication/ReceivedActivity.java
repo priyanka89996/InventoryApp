@@ -45,7 +45,7 @@ public class ReceivedActivity extends AppCompatActivity implements UpdateProduct
         adapter = new ReceivedAdapter(ReceivedActivity.this);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("placedOrders");
+        databaseReference = firebaseDatabase.getReference("RestockOrders");
         updateRecordRef = firebaseDatabase.getReference("product");
         recyclerView = findViewById(R.id.rvReceivedOrder);
         tvNoDate = findViewById(R.id.tvNoDate);
