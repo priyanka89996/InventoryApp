@@ -32,10 +32,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -211,17 +213,36 @@ public class AddProductActivity extends AppCompatActivity {
                             storageReference2nd.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    loader.dismiss();
 
+                                    databaseReference.child(String.valueOf(etBarCode.getText())).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DataSnapshot dataSnapshot = task.getResult();
+                                                ProductData products;
+                                                if (dataSnapshot.exists()) {
+                                                    ProductData oldProducts = dataSnapshot.getValue(ProductData.class);
+                                                    int newQuantity = quantity + oldProducts.getQuantity();
+                                                    products = new ProductData(etProductName.getText().toString().trim(), etBarCode.getText().toString().trim(),
+                                                            uri.toString(), wPrice, rPrice, newQuantity, uploadedVideoUrl);
+
+                                                } else {
+                                                    products = new ProductData(etProductName.getText().toString().trim(), etBarCode.getText().toString().trim(),
+                                                            uri.toString(), wPrice, rPrice, quantity, uploadedVideoUrl);
+                                                }
+
+                                                // Adding image upload id s child element into databaseReference.
+                                                databaseReference.child(etBarCode.getText().toString().trim()).setValue(products);
+                                            }
+                                        }
+                                    });
+
+
+                                    loader.dismiss();
                                     // Showing toast message after done uploading.
                                     Toast.makeText(getApplicationContext(), "Data Uploaded Successfully ", Toast.LENGTH_LONG).show();
                                     finish();
-                                    @SuppressWarnings("VisibleForTests")
-                                    ProductData ProductData = new ProductData(etProductName.getText().toString().trim()
-                                            , etBarCode.getText().toString().trim(), uri.toString(), wPrice, rPrice, quantity, uploadedVideoUrl);
 
-                                    // Adding image upload id s child element into databaseReference.
-                                    databaseReference.child(etBarCode.getText().toString().trim()).setValue(ProductData);
                                 }
                             });
 
