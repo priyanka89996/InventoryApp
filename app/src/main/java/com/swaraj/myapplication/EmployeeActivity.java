@@ -71,7 +71,7 @@ public class EmployeeActivity extends AppCompatActivity {
     String userName = "employee";
     int totalItems = 0, totalAmount = 0;
     boolean threadTrigger = false;
-    String DisBarCode, Percentage,BuyQuantity,FreeQuantity,Amount,ProductBarcode, StartDate, EndDate;
+
     Dialog loader;
 
     @Override
@@ -246,10 +246,31 @@ public class EmployeeActivity extends AppCompatActivity {
                 //employeeItems.child(productData.get(0).getBarCode()).setValue(productData);
                 totalItems = 0;
                 totalAmount = 0;
+                int dis = 0;
+
                 for (int i = 0; i < cartProductData.size(); i++) {
                     totalItems = cartProductData.size();
-                    totalAmount += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+                    if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")){
+                        dis += 1;
+                    }else{
+                        totalAmount += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+                    }
+
                 }
+                for (int i = 0; i < cartProductData.size(); i++) {
+                    totalItems = cartProductData.size();
+                    if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")){
+                        double temp = totalAmount * (cartProductData.get(i).getrPrice()/100.0);
+                        double temp2 = totalAmount - temp;
+                        totalAmount = (int) temp2;
+
+                    }else{
+                        dis -=1;
+                    }
+
+                }
+
+
                 tvTotalItems.setText("Total Item : " + totalItems);
                 tvTotalAmount.setText("Total Amount : " + totalAmount + "£");
             }
@@ -303,6 +324,11 @@ public class EmployeeActivity extends AppCompatActivity {
 
     public void checkOutData() {
         for (int i = 0; i < cartProductData.size(); i++) {
+
+            if(cartProductData.get(i).getName().equalsIgnoreCase("percentage") || cartProductData.get(i).getName().equalsIgnoreCase("Money Off")){
+                continue;
+            }
+
 
             DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("product").child(cartProductData.get(i).getBarCode());
 
@@ -476,9 +502,25 @@ public class EmployeeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new OrderSummeryAdapter(this, cartProductData));
         tvTotalItem.setText("Total Items : " + cartProductData.size());
+        int dis = 0;
         for (int i = 0; i < cartProductData.size(); i++) {
             quantity += cartProductData.get(i).getQuantity();
-            price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+            if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")){
+                dis += 1;
+            }else{
+                price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+            }
+        }
+        for (int i = 0; i < cartProductData.size(); i++) {
+            if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")){
+                double temp = price * (cartProductData.get(i).getrPrice()/100.0);
+                double temp2 = price- temp;
+                price = (int) temp2;
+
+            }else{
+                dis -=1;
+            }
+
         }
         tvTotalQuantity.setText("Total Quantity : " + quantity);
         tvTotalAmount.setText("Total Amount : " + price);
@@ -504,12 +546,29 @@ public class EmployeeActivity extends AppCompatActivity {
         DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("placedOrders");
         int quantity = 0;
         int price = 0;
+        int dis = 0;
         List<OrderData> basketItems = new ArrayList<>();
         for (int i = 0; i < cartProductData.size(); i++) {
             quantity += cartProductData.get(i).getQuantity();
-            price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+            if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")){
+                dis += 1;
+            }else{
+                price += cartProductData.get(i).getrPrice() * cartProductData.get(i).getQuantity();
+            }
+
             basketItems.add(new OrderData( cartProductData.get(i).getName(), cartProductData.get(i).getBarCode(), cartProductData.get(i).getrPrice(),
                     cartProductData.get(i).getQuantity()));
+
+        }
+        for (int i = 0; i < cartProductData.size(); i++) {
+            totalItems = cartProductData.size();
+            if(cartProductData.get(i).getName().equalsIgnoreCase("percentage")) {
+                double temp = price * (cartProductData.get(i).getrPrice() / 100.0);
+                double temp2 = price - temp;
+                price = (int) temp2;
+            }else{
+                dis -=1;
+            }
 
         }
 
@@ -577,20 +636,63 @@ public class EmployeeActivity extends AppCompatActivity {
     }
     public void getDiscount(String barCode) {
 
+
         firebaseDatabase.getReference("Discounts")
                 .child(barCode)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        productData.clear();
+                        boolean isFound = false;
+                        int quantity = 0;
                         Discounts d = snapshot.getValue(Discounts.class);
                         if (d != null) {
-                            DiscountData.add(d);
-                            etBarCode.setText("");
-                            etBarCode.setFocusable(true);
-                            etBarCode.requestFocus();
-                            showToast("Discount Added");
+                            isFound = true;
+                            tvProductName.setText(d.Type);
+
+
+                            Log.d("changedItemValue", "["+d.Type+"]");
+
+                            if(d.Type.equalsIgnoreCase("percentage")){
+                                tvRetailPrice.setText(d.Data + "% off");
+                                productData.add(new ProductData(d.Type,barCode,"https://firebasestorage.googleapis.com/v0/b/mystockapp-2e88d.appspot.com/o/product_Images%2Fpng-clipart-red-and-white-special-discount-icon-special-discount-sign-miscellaneous-discount-signs-thumbnail.png?alt=media&token=30f8af3a-e2d0-4efc-bdfe-1b2613be2106",0,
+                                        Integer.parseInt(d.Data),1," "));
+
+                            } else if (d.Type.equalsIgnoreCase( "Buy one Get One")){
+                                tvRetailPrice.setText("buy "+d.Data +" Get "+d.ExtraData+ " off");
+                                productData.add(new ProductData(d.Type,barCode,"https://firebasestorage.googleapis.com/v0/b/mystockapp-2e88d.appspot.com/o/product_Images%2Fpng-clipart-red-and-white-special-discount-icon-special-discount-sign-miscellaneous-discount-signs-thumbnail.png?alt=media&token=30f8af3a-e2d0-4efc-bdfe-1b2613be2106",Integer.parseInt(d.ExtraData),
+                                        Integer.parseInt(d.Data),1," "));
+
+                            }else{
+                                tvRetailPrice.setText("£" + d.Data + " off");
+                                productData.add(new ProductData(d.Type,barCode,"https://firebasestorage.googleapis.com/v0/b/mystockapp-2e88d.appspot.com/o/product_Images%2Fpng-clipart-red-and-white-special-discount-icon-special-discount-sign-miscellaneous-discount-signs-thumbnail.png?alt=media&token=30f8af3a-e2d0-4efc-bdfe-1b2613be2106",0,
+                                        (0-Integer.parseInt(d.Data)),1," "));
+
+                            }
+
+
                         }else {
+                            isFound = false;
                             showToast("Discount not found");
+                        }
+
+                        if (isFound == true) {
+                            if (productData.get(0).getQuantity() > 0) {
+                                llDisplayItemData.setVisibility(View.VISIBLE);
+                                llCartData.setVisibility(View.VISIBLE);
+                                llAddToCart.setVisibility(View.VISIBLE);
+                                if (etBarCode.getText().toString().trim().equalsIgnoreCase("")) {
+                                    llDisplayItemData.setVisibility(View.GONE);
+                                    llAddToCart.setVisibility(View.GONE);
+                                    threadTrigger = false;
+                                }
+                            } else {
+                                showToast("Stock is finished for this item");
+                                //Toast.makeText(EmployeeActivity.this, "", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            showToast("No Product found with this bar code");
+                            //Toast.makeText(EmployeeActivity.this, "No Product found with this bar code", Toast.LENGTH_SHORT).show();
                         }
                    }
 
