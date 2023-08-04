@@ -44,7 +44,7 @@
             android:hint="@string/enter_email"
             android:inputType="textPersonName"
             android:padding="@dimen/margin10"
-            android:text=""
+            android:text="employee1"
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />
@@ -79,7 +79,7 @@
             android:hint="@string/enterpassword"
             android:inputType="textPassword"
             android:padding="@dimen/margin10"
-            android:text=""
+            android:text="p455w0rd"
             android:textColor="@color/black"
             android:textColorHint="#B6B6B6"
             android:textSize="@dimen/textsize_normal" />

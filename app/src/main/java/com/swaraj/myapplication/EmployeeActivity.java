@@ -23,6 +23,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -53,7 +55,7 @@ import java.util.regex.Pattern;
 
 public class EmployeeActivity extends AppCompatActivity {
 
-    EditText etBarCode;
+    AutoCompleteTextView etBarCode;
     TextView tvProductName, tvNoData, tvRetailPrice, tvTotalItems, tvTotalAmount;
     Button btnTill, btnAddToCart, btnCheckout, btnLogout;
     RecyclerView recyclerView;
@@ -73,6 +75,8 @@ public class EmployeeActivity extends AppCompatActivity {
     boolean threadTrigger = false;
 
     Dialog loader;
+    ArrayAdapter adapter;
+    ArrayList<String> barCodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,7 @@ public class EmployeeActivity extends AppCompatActivity {
         getEmployeeItems = FirebaseDatabase.getInstance().getReference(userName);
         progressDialog = new ProgressDialog(EmployeeActivity.this);
         etBarCode = findViewById(R.id.etBarCode);
+
         tvProductName = findViewById(R.id.tvProductName);
         tvRetailPrice = findViewById(R.id.tvPrice);
         btnTill = findViewById(R.id.btnTill);
@@ -176,7 +181,28 @@ public class EmployeeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                loader.dismiss();
+            }
+        });
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                loader.dismiss();
+                showLoader("Please Wait");
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    //ProductData data = postSnapshot.getValue(ProductData.class);
+                    Log.d("snapValue", "" + postSnapshot.child("name").getValue());
+                    barCodes.add(String.valueOf(postSnapshot.child("barCode").getValue()));
+                }
+                //String barcode[] = barCodes.toArray(new String[barCodes.size()]);
+                adapter = new ArrayAdapter(EmployeeActivity.this,android.R.layout.simple_list_item_1,barCodes.toArray());
+                etBarCode.setAdapter(adapter);
+                loader.dismiss();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loader.dismiss();
             }
         });
 
