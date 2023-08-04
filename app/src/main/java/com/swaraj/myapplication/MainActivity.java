@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     Button btnRestock, btnReceivedStock,btnLogout;
-    FloatingActionButton btnAdd;
+    FloatingActionButton btnAdd, btnAdd2;
     TextView tvTotalStock, tvNoDate;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         btnRestock = findViewById(R.id.btnRestock);
         btnReceivedStock = findViewById(R.id.btnReceivedStock);
         btnAdd = findViewById(R.id.btnAdd);
+        btnAdd2 = findViewById(R.id.btnAdd2);
         tvTotalStock = findViewById(R.id.tvTotalValue);
         tvNoDate = findViewById(R.id.tvNoDate);
         ivAudio = findViewById(R.id.ivAudio);
@@ -96,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AddProductActivity.class));
+            }
+        });
+
+        btnAdd2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddDiscount.class));
             }
         });
         btnRestock.setOnClickListener(new View.OnClickListener() {

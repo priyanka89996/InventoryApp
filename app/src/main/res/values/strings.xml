@@ -42,4 +42,5 @@
     <string name="cencel">Cancel</string>
     <string name="summery">Product Summery</string>
     <string name="enter_email">Enter Email</string>
+    <string name="enter_discount_code">Enter Discount Code</string>
 </resources>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".AddProductActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin20"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etDisCode"
+                android:maxLength="12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin10"
+                android:background="@drawable/edit_text_border_corner"
+                android:hint="@string/enter_discount_code"
+                android:textColor="@color/black"
+                android:padding="@dimen/padding15" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border_corner"
+                android:padding="@dimen/padding15">
+
+                <TextView
+                    android:id="@+id/tvWholesalePrice2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Type of Discount"
+                    android:textSize="@dimen/textsize_normal" />
+
+                <RadioButton
+                    android:id="@+id/RBpercentage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Percentage Off" />
+
+                <RadioButton
+                    android:id="@+id/RBbogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Buy One Get One" />
+
+                <RadioButton
+                    android:id="@+id/RBm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Money Off" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin5"
+                android:layout_marginBottom="@dimen/margin50"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/Percentage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin15"
+                    android:background="@drawable/edit_text_border_corner"
+                    android:hint="Percentage"
+                    android:padding="@dimen/padding15"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/LlQuantitys"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/BuyQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margin15"
+                        android:layout_weight="0.4"
+                        android:background="@drawable/edit_text_border_corner"
+                        android:hint="Buy Quantity"
+                        android:padding="@dimen/padding15"
+                        android:textColor="@color/black" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_weight="0.4" />
+
+                    <EditText
+                        android:id="@+id/FreeQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margin15"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/edit_text_border_corner"
+                        android:hint="Free Quantity"
+                        android:padding="@dimen/padding15"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/Amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin15"
+                    android:background="@drawable/edit_text_border_corner"
+                    android:hint="Amount"
+                    android:padding="@dimen/padding15"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/ProductBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin15"
+                    android:background="@drawable/edit_text_border_corner"
+                    android:hint="Product Barcode"
+                    android:maxLength="12"
+                    android:padding="@dimen/padding15"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/StartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin15"
+                    android:background="@drawable/edit_text_border_corner"
+                    android:drawableRight="@drawable/baseline_date_range_24"
+                    android:ems="10"
+                    android:hint="Start Date"
+                    android:inputType="date"
+                    android:padding="@dimen/padding15" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <EditText
+                    android:id="@+id/EndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin15"
+                    android:background="@drawable/edit_text_border_corner"
+                    android:drawableRight="@drawable/baseline_date_range_24"
+                    android:ems="10"
+                    android:hint="End Date"
+                    android:inputType="date"
+                    android:padding="@dimen/padding15" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/margin50" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnAddDis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Discount"></Button>
+    </LinearLayout>
+</RelativeLayout>
