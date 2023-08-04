@@ -38,13 +38,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.swaraj.myapplication.adapter.EmployeeAdapter;
 import com.swaraj.myapplication.adapter.OrderSummeryAdapter;
+import com.swaraj.myapplication.data.Discounts;
 import com.swaraj.myapplication.data.OrderData;
 import com.swaraj.myapplication.data.ProductData;
+import com.swaraj.myapplication.data.User;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EmployeeActivity extends AppCompatActivity {
 
@@ -60,11 +65,13 @@ public class EmployeeActivity extends AppCompatActivity {
     DatabaseReference employeeItems;
     ArrayList<ProductData> productData, changedProductQuantity;
     ArrayList<ProductData> cartProductData;
+    ArrayList<Discounts> DiscountData= new ArrayList<>();
     ProgressDialog progressDialog;
     Intent intent;
     String userName = "employee";
     int totalItems = 0, totalAmount = 0;
     boolean threadTrigger = false;
+    String DisBarCode, Percentage,BuyQuantity,FreeQuantity,Amount,ProductBarcode, StartDate, EndDate;
     Dialog loader;
 
     @Override
@@ -277,9 +284,13 @@ public class EmployeeActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String s = etBarCode.getText().toString();
                     if (etBarCode.getText().toString().trim().equalsIgnoreCase("") | etBarCode.getText().toString().trim().length() < 12) {
                         showToast("Enter correct bar code ");
                         //Toast.makeText(EmployeeActivity.this, "Enter correct bar code ", Toast.LENGTH_SHORT).show();
+                    } else if (CheckDiscountCode(s)!= null) {
+                        getDiscount(s);
+                        return false;
                     } else {
                         getData(etBarCode.getText().toString().trim());
                     }
@@ -344,6 +355,7 @@ public class EmployeeActivity extends AppCompatActivity {
         showLoader("Getting Product Data...");
         //progressDialog.setTitle("Getting Product Data...");
         //progressDialog.show();
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -370,8 +382,7 @@ public class EmployeeActivity extends AppCompatActivity {
                         isFound = false;
                     }
 
-                }
-                if (isFound == true) {
+                }if (isFound == true) {
                     if (productData.get(0).getQuantity() > 0) {
                         llDisplayItemData.setVisibility(View.VISIBLE);
                         llCartData.setVisibility(View.VISIBLE);
@@ -408,6 +419,7 @@ public class EmployeeActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void showToast(String title) {
         final Dialog dialog = new Dialog(this);
@@ -538,10 +550,57 @@ public class EmployeeActivity extends AppCompatActivity {
 
     }
 
+    private String CheckDiscountCode(String text) {
+        // Define the regex pattern for the date format "dd/MM/yyyy"
+        String regPat = "\\b[A-Za-z][A-Za-z0-9]{11}\\b";
+
+        // Create a Pattern object
+        Pattern pat = Pattern.compile(regPat);
+
+        // Create a Matcher object and find the date in the text
+        Matcher matcher = pat.matcher(text);
+
+        if (matcher.find()) {
+            // Return the matched date
+            return matcher.group();
+        } else {
+            // Return null if no date is found
+            return null;
+        }
+    }
+
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+    public void getDiscount(String barCode) {
+
+        firebaseDatabase.getReference("Discounts")
+                .child(barCode)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Discounts d = snapshot.getValue(Discounts.class);
+                        if (d != null) {
+                            DiscountData.add(d);
+                            etBarCode.setText("");
+                            etBarCode.setFocusable(true);
+                            etBarCode.requestFocus();
+                            showToast("Discount Added");
+                        }else {
+                            showToast("Discount not found");
+                        }
+                   }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
     }
 }

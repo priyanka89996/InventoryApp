@@ -34,7 +34,7 @@
                     android:focusable="true"
                     android:hint="@string/enterBarCodeNumber"
                     android:imeOptions="actionSearch"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:maxLength="12"
                     android:padding="@dimen/padding15" />
 

@@ -7,8 +7,8 @@ public class Discounts {
     public String Type;
     public String Start_Date;
     public String End_Date;
-    public String Data1;
-    public String Data2;
+    public String Data;
+    public String ExtraData;
     public String Product_Barcode;
 
 
@@ -17,11 +17,13 @@ public class Discounts {
 
     public Discounts (String type, String data1, String data2, String proBar, String sd, String ed ) {
         this.Type = type;
-        this.Data1 = data1;
-        this.Data2 = data2;
+        this.Data = data1;
+        this.ExtraData = data2;
         this.Product_Barcode = proBar;
         this.Start_Date = sd;
         this.End_Date = ed;
 
     }
+
+
 }
